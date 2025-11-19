@@ -1,0 +1,59 @@
+@import 'tailwindcss';
+
+body {
+  @apply m-2 p-1;
+}
+
+button {
+  @apply cursor-pointer rounded-sm py-2 px-3 bg-amber-950 text-amber-400 m-1;
+}
+
+h1, h2, h3 {
+  @apply font-semibold text-2xl text-cyan-800;
+}
+
+input {
+  @apply min-w-2/4;
+}
+
+/* Forms */
+label {
+  @apply min-w-32;
+}
+
+fieldset {
+  @apply block m-2 p-1 border-2 border-amber-900;
+}
+
+legend {
+  @apply font-thin italic px-1;
+}
+/* Forms • end */
+
+ul, ol {
+  @apply list-disc my-5 mx-3;
+}
+
+table {
+  @apply md:table-fixed;
+}
+
+thead > tr {
+  @apply bg-amber-100 border-b border-amber-950;
+}
+
+tbody > tr {
+  @apply border-b border-amber-950 hover:bg-amber-200 transition-colors duration-150;
+}
+
+tr > th {
+  @apply py-2 px-4 text-sm font-medium text-amber-900 text-center align-middle;
+}
+
+tr > td {
+  @apply py-2 px-4 text-sm text-amber-700 text-center align-middle;
+}
+
+h1, h2, h3 {
+  @apply mt-5 mb-2 mx-3;
+}

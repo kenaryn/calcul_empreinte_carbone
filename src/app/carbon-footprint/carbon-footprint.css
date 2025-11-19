@@ -1,0 +1,9 @@
+@reference 'tailwindcss';
+
+.high, .basse-distance {
+  @apply font-semibold text-red-500;
+}
+
+.low, .haute-distance {
+  @apply font-semibold text-green-700;
+}

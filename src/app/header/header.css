@@ -1,0 +1,5 @@
+@reference 'tailwindcss';
+
+h1 {
+  @apply text-4xl flex justify-center m-2 p-4 bg-gradient-to-b from-amber-500 to-amber-900 text-amber-200 rounded-xl
+}

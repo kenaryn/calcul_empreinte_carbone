@@ -1,0 +1,25 @@
+<!--l'alias est une astuce pour supporter la nullabilité des signaux
+il garantit que la valeur est TOUJOURS définie dans la structure conditionnelle -->
+@if (getNomSiNonVide()) {
+  <h2 [class.admin]="isAdmin()" [textContent]="nom | titlecase | slice: 0:8"></h2>
+}
+<form>
+  <fieldset>
+    <legend>Fiche utilisateur</legend>
+    <label for="nom">Nom : </label>
+    <input #nomInput type="text" id="nom" name="nom" [(ngModel)]="nom" />
+  </fieldset>
+  <button (click)="reset()">Reset</button>
+  <button (click)="ajouterUtilisateur()">Ajouter</button>
+  <button (click)="login()">Se connecter</button>
+  <button (click)="utilisateurConnecte()">Je suis déjà connecté</button>
+</form>
+
+<ul>
+  @for (utilisateur of utilisateurs; track utilisateur.nom) {
+    <li>
+      <span [textContent]="utilisateur.nom | titlecase"></span>
+      <button class="delete" (click)="supprimerUtilisateur(utilisateur)">Supprimer</button>
+    </li>
+  }
+</ul>

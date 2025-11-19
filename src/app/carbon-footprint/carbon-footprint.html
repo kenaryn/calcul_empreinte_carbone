@@ -1,0 +1,43 @@
+<eni-carbon-footprint-form />
+<eni-carbon-footprint-result />
+
+<ul>
+  <li [textContent]="'Distance : ' + distanceKm + 'km'"></li>
+  <li [textContent]="'Consommation aux 100km : ' + consommationPour100km"></li>
+  <li [textContent]="'Consommation totale : ' + (distanceKm * consommationPour100km) / 100"></li>
+</ul>
+
+@if (consommationPour100km > 7) {
+  <p [class]="isLowOrHigh()">Attention, votre consommation est élevée.</p>
+} @else if (consommationPour100km < 4) {
+  <p [class]="isLowOrHigh()">Félicitations, votre consommation est faible.</p>
+}
+
+@if (distanceKm > 500) {
+  <p [class]="isFartherOrCloser()">Votre distance est grande, plus de 500km.</p>
+} @else if (distanceKm < 100) {
+  <p [class]="isFartherOrCloser()">Vous avez parcouru une faible distance.</p>
+}
+
+<button (click)="ajouter100Km()">Ajouter 100km</button>
+
+<h2>Liste des voyages</h2>
+<table>
+  <thead>
+    <tr>
+      <th>Distance</th>
+      <th>Consommation pour 100 km</th>
+    </tr>
+  </thead>
+  <tbody>
+    @for (voyage of voyages; track voyage.id) {
+      <tr>
+        <td [textContent]="voyage.distanceKm"></td>
+        <td [textContent]="voyage.consommationPour100Km"></td>
+      </tr>
+    }
+  </tbody>
+</table>
+
+<button (click)="genererVoyage()">Générer voyage</button>
+
