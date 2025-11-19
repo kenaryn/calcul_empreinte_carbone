@@ -30,12 +30,13 @@ export class CarbonFootprint implements OnInit, OnDestroy, AfterContentInit, Aft
 
   protected _distanceKm: WritableSignal<number> = signal(50);
   protected _consommationPour100km: WritableSignal<number> = signal(3.5);
-  protected _voyages: WritableSignal<{ id: number, distanceKm: number, consommationPour100Km: number }[]> = signal([]);
+  protected _quantiteCO2Totale: WritableSignal<number> = signal(300);
+  protected _voyages: WritableSignal<{ id: number, distanceKm: number, consommationPour100Km: number, quantiteCO2: number }[]> = signal([]);
   /* Injection de dépendances - fin */
 
 
   /* Accesseurs */
-  public get voyages(): { id: number, distanceKm: number, consommationPour100Km: number }[] {
+  public get voyages(): { id: number, distanceKm: number, consommationPour100Km: number, quantiteCO2: number }[] {
     return this._voyages();
   }
 
@@ -56,6 +57,16 @@ export class CarbonFootprint implements OnInit, OnDestroy, AfterContentInit, Aft
   public set distanceKm(km: number) {
     if (this.distanceKm >= 0) {
       this._distanceKm.set(km);
+    }
+  }
+
+  public get quantiteCO2Totale(): number {
+    return this._quantiteCO2Totale();
+  }
+
+  public set quantiteCO2Totale(CO2: number) {
+    if (this.quantiteCO2Totale > 0) {
+      this._quantiteCO2Totale.set(CO2);
     }
   }
   /* Accesseurs - fin */
@@ -93,7 +104,8 @@ export class CarbonFootprint implements OnInit, OnDestroy, AfterContentInit, Aft
   public calculerTotalEtMoyenne() {
     let resume = this.carbonFootprintComputeService.getResumeVoyages();
     this.distanceKm = resume.distanceKmTotale;
-    this.consommationPour100km = resume.consommationPour100Km;
+    this.consommationPour100km = resume.consommationPour100KmTotale;
+    this.quantiteCO2Totale = resume.quantiteCO2Totale;
   }
 
   public recupererVoyages(): void {
@@ -113,6 +125,20 @@ export class CarbonFootprint implements OnInit, OnDestroy, AfterContentInit, Aft
     this._distanceKm.update((distance: number): number => (distance + 100));
   }
 
+  // public genererVoyage(): void {
+  //   if (this.voyages) {
+  //     // Générer un nouvel identifiant
+  //     const nouveauId = this.voyages.length > 0 ? Math.max(...this.voyages.map(val => val.id)) + 1 : 1;
+  //
+  //     this._voyages.update(v =>
+  //       ([ ...v,
+  //         { id: 6, distanceKm: this.genererNombreAleatoire(30, 600, 5),
+  //           consommationPour100Km: this.genererNombreAleatoire(3, 11, 1),
+  //           quantiteCO2: this.genererNombreAleatoire(100, 400, 2) }
+  //       ]));
+  //   }
+  // }
+
   public genererVoyage(): void {
     if (this.voyages) {
       // Générer un nouvel identifiant
@@ -120,8 +146,11 @@ export class CarbonFootprint implements OnInit, OnDestroy, AfterContentInit, Aft
 
       this._voyages.update(v =>
         ([ ...v,
-          { id: 6, distanceKm: this.genererNombreAleatoire(30, 600, 5), consommationPour100Km: this.genererNombreAleatoire(3, 11, 1) }
+          { id: 6, distanceKm: this.genererNombreAleatoire(30, 600, 5),
+            consommationPour100Km: this.genererNombreAleatoire(3, 11, 1),
+            quantiteCO2: this.genererNombreAleatoire(100, 400, 2) }
         ]));
+      this.calculerTotalEtMoyenne();
     }
   }
   /* Méthodes · logique métier · fin */
@@ -131,5 +160,13 @@ export class CarbonFootprint implements OnInit, OnDestroy, AfterContentInit, Aft
   private genererNombreAleatoire(min: number, max: number, pas: number): number {
     const paliers = Math.floor((max - min) / pas) + 1;
     return Math.floor(Math.random() * paliers) * pas + min;
+  }
+
+  protected tronquerAffichageNombre(nombreDecimal: number): number {
+    let nombreTronque: string =  nombreDecimal.toLocaleString(undefined, {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2
+    });
+    return Number(nombreTronque);
   }
 }

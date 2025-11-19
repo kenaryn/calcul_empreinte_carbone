@@ -2,9 +2,10 @@
 <eni-carbon-footprint-result />
 
 <ul>
-  <li [textContent]="'Distance : ' + distanceKm + 'km'"></li>
+  <li [textContent]="'Distance totale : ' + distanceKm + 'km'"></li>
   <li [textContent]="'Consommation aux 100km : ' + consommationPour100km"></li>
-  <li [textContent]="'Consommation totale : ' + (distanceKm * consommationPour100km) / 100"></li>
+<!--  <li [textContent]="'Empreinte carbone : ' + tronquerAffichageNombre(((distanceKm * consommationPour100km) / 100) * 2.3) + ' kg'"></li>-->
+  <li [textContent]="'Empreinte carbone : ' + quantiteCO2Totale + ' kg'"></li>
 </ul>
 
 @if (consommationPour100km > 7) {
@@ -27,6 +28,7 @@
     <tr>
       <th>Distance</th>
       <th>Consommation pour 100 km</th>
+      <th>Quantité CO2</th>
     </tr>
   </thead>
   <tbody>
@@ -34,6 +36,7 @@
       <tr>
         <td [textContent]="voyage.distanceKm"></td>
         <td [textContent]="voyage.consommationPour100Km"></td>
+        <td [textContent]="voyage.quantiteCO2"></td>
       </tr>
     }
   </tbody>
