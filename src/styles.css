@@ -9,7 +9,7 @@ button {
 }
 
 h1, h2, h3 {
-  @apply font-semibold text-2xl text-cyan-800;
+  @apply font-semibold text-2xl text-amber-800;
 }
 
 input {

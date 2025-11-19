@@ -1,17 +1,17 @@
 import {
-  Component,
-  OnInit,
-  OnDestroy,
-  AfterContentInit,
-  AfterViewInit,
   AfterContentChecked,
+  AfterContentInit,
   AfterViewChecked,
+  AfterViewInit,
+  Component,
+  inject,
+  OnDestroy,
+  OnInit,
   signal,
-  WritableSignal,
-  inject
+  WritableSignal
 } from '@angular/core';
-import { CarbonFootprintForm } from '../carbon-footprint-form/carbon-footprint-form';
-import { CarbonFootprintResult } from '../carbon-footprint-result/carbon-footprint-result';
+import {CarbonFootprintForm} from '../carbon-footprint-form/carbon-footprint-form';
+import {CarbonFootprintResult} from '../carbon-footprint-result/carbon-footprint-result';
 import {CarbonFootprintComputeService} from '../services/carbon-footprint-compute.service';
 
 @Component({
@@ -41,6 +41,12 @@ export class CarbonFootprint implements OnInit, OnDestroy, AfterContentInit, Aft
 
   public get consommationPour100km(): number {
     return this._consommationPour100km();
+  }
+
+  public set consommationPour100km(consommation: number) {
+    if (this.consommationPour100km > 0) {
+      this._consommationPour100km.set(consommation);
+    }
   }
 
   public get distanceKm(): number {
@@ -85,12 +91,14 @@ export class CarbonFootprint implements OnInit, OnDestroy, AfterContentInit, Aft
 
   /* Méthodes · logique métier */
   public calculerTotalEtMoyenne() {
-
+    let resume = this.carbonFootprintComputeService.getResumeVoyages();
+    this.distanceKm = resume.distanceKmTotale;
+    this.consommationPour100km = resume.consommationPour100Km;
   }
 
   public recupererVoyages(): void {
     console.info('Composant recupererVoyages');
-    this._voyages.set(this.carbonFootprintComputeService.voyages());
+    this._voyages.set(this.carbonFootprintComputeService.voyages);
   }
 
   public isLowOrHigh = (): string => (this.consommationPour100km > 7) ? 'high' : (this.consommationPour100km < 4) ? 'low' : 'normal';
@@ -102,7 +110,7 @@ export class CarbonFootprint implements OnInit, OnDestroy, AfterContentInit, Aft
    * (qui retourne un number; la méthode update() n'existant pas sur ce type primitif.
    */
   public ajouter100Km(): void {
-    this._distanceKm.update((distance: number): number => (distance += 100));
+    this._distanceKm.update((distance: number): number => (distance + 100));
   }
 
   public genererVoyage(): void {
@@ -123,16 +131,5 @@ export class CarbonFootprint implements OnInit, OnDestroy, AfterContentInit, Aft
   private genererNombreAleatoire(min: number, max: number, pas: number): number {
     const paliers = Math.floor((max - min) / pas) + 1;
     return Math.floor(Math.random() * paliers) * pas + min;
-  }
-
-  private getResumeVoyages(voyages: { id: number, distanceKm: number, consommationPour100Km: number }[]): { distanceKm: number, consommationPour100Km: number } {
-    let distanceKm: number = 0;
-    let consommationPour100Km: number = 0;
-
-    this.voyages.forEach((voyage) => {
-      distanceKm += voyage.distanceKm;
-      consommationPour100Km += voyage.consommationPour100Km;
-    });
-    return { distanceKm: distanceKm, consommationPour100Km: (consommationPour100Km / this.voyages.length) };
   }
 }
