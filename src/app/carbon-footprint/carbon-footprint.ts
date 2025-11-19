@@ -8,9 +8,11 @@ import {
   AfterViewChecked,
   signal,
   WritableSignal,
+  inject
 } from '@angular/core';
 import { CarbonFootprintForm } from '../carbon-footprint-form/carbon-footprint-form';
 import { CarbonFootprintResult } from '../carbon-footprint-result/carbon-footprint-result';
+import {CarbonFootprintComputeService} from '../services/carbon-footprint-compute.service';
 
 @Component({
   selector: 'eni-carbon-footprint',
@@ -23,17 +25,16 @@ import { CarbonFootprintResult } from '../carbon-footprint-result/carbon-footpri
 })
 export class CarbonFootprint implements OnInit, OnDestroy, AfterContentInit, AfterViewInit, AfterContentChecked, AfterViewChecked {
 
+  /* Injection de dépendances */
+  protected carbonFootprintComputeService: CarbonFootprintComputeService = inject(CarbonFootprintComputeService);
+
   protected _distanceKm: WritableSignal<number> = signal(50);
   protected _consommationPour100km: WritableSignal<number> = signal(3.5);
+  protected _voyages: WritableSignal<{ id: number, distanceKm: number, consommationPour100Km: number }[]> = signal([]);
+  /* Injection de dépendances - fin */
 
-  protected _voyages: WritableSignal<{ id: number, distanceKm: number, consommationPour100Km: number }[]> = signal([
-    { id: 1, distanceKm: 50,  consommationPour100Km: 5},
-    { id: 2, distanceKm: 150, consommationPour100Km: 6},
-    { id: 3, distanceKm: 250, consommationPour100Km: 7},
-    { id: 4, distanceKm: 350, consommationPour100Km: 8},
-    { id: 5, distanceKm: 450, consommationPour100Km: 9},
-  ]);
 
+  /* Accesseurs */
   public get voyages(): { id: number, distanceKm: number, consommationPour100Km: number }[] {
     return this._voyages();
   }
@@ -51,9 +52,13 @@ export class CarbonFootprint implements OnInit, OnDestroy, AfterContentInit, Aft
       this._distanceKm.set(km);
     }
   }
+  /* Accesseurs - fin */
 
+
+  /* Cycle de vie du composant */
     ngOnInit(): void {
-      // console.info('Le composant CarbonFootprint est initialisé.')
+      console.info('Le composant est initialisé avec les données d\'un service API');
+      this.recupererVoyages();
     }
 
     ngOnDestroy(): void {
@@ -75,6 +80,18 @@ export class CarbonFootprint implements OnInit, OnDestroy, AfterContentInit, Aft
     ngAfterViewChecked(): void {
       // console.info('La vue du composant a été vérifiée');
     }
+  /* Cycle de vie du composant - fin */
+
+
+  /* Méthodes · logique métier */
+  public calculerTotalEtMoyenne() {
+
+  }
+
+  public recupererVoyages(): void {
+    console.info('Composant recupererVoyages');
+    this._voyages.set(this.carbonFootprintComputeService.voyages());
+  }
 
   public isLowOrHigh = (): string => (this.consommationPour100km > 7) ? 'high' : (this.consommationPour100km < 4) ? 'low' : 'normal';
 
@@ -99,9 +116,23 @@ export class CarbonFootprint implements OnInit, OnDestroy, AfterContentInit, Aft
         ]));
     }
   }
+  /* Méthodes · logique métier · fin */
 
+
+  /* Méthodes · utilitaires */
   private genererNombreAleatoire(min: number, max: number, pas: number): number {
     const paliers = Math.floor((max - min) / pas) + 1;
     return Math.floor(Math.random() * paliers) * pas + min;
+  }
+
+  private getResumeVoyages(voyages: { id: number, distanceKm: number, consommationPour100Km: number }[]): { distanceKm: number, consommationPour100Km: number } {
+    let distanceKm: number = 0;
+    let consommationPour100Km: number = 0;
+
+    this.voyages.forEach((voyage) => {
+      distanceKm += voyage.distanceKm;
+      consommationPour100Km += voyage.consommationPour100Km;
+    });
+    return { distanceKm: distanceKm, consommationPour100Km: (consommationPour100Km / this.voyages.length) };
   }
 }
