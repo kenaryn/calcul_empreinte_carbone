@@ -31,7 +31,7 @@ export class CarbonFootprintComputeService {
   }
 
   public ajouterVoyage(voyage: any): void {
-    voyage.quantiteCO2 = (voyage.distanceKm * voyage.consommationPour100km) / 100 * 2.3;
+    voyage.quantiteCO2 = (voyage.distanceKm * voyage.consommationPour100Km) / 100 * 2.3;
     this._voyages.update(v => ([...v, voyage]));
   }
 }

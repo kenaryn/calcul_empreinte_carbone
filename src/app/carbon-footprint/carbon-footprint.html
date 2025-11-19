@@ -3,14 +3,13 @@
 
 <ul>
   <li [textContent]="'Distance totale : ' + distanceKm + 'km'"></li>
-  <li [textContent]="'Consommation aux 100km : ' + consommationPour100km"></li>
-<!--  <li [textContent]="'Empreinte carbone : ' + tronquerAffichageNombre(((distanceKm * consommationPour100km) / 100) * 2.3) + ' kg'"></li>-->
+  <li [textContent]="'Consommation aux 100km : ' + consommationPour100Km"></li>
   <li [textContent]="'Empreinte carbone : ' + quantiteCO2Totale + ' kg'"></li>
 </ul>
 
-@if (consommationPour100km > 7) {
+@if (consommationPour100Km > 7) {
   <p [class]="isLowOrHigh()">Attention, votre consommation est élevée.</p>
-} @else if (consommationPour100km < 4) {
+} @else if (consommationPour100Km < 4) {
   <p [class]="isLowOrHigh()">Félicitations, votre consommation est faible.</p>
 }
 
@@ -36,7 +35,7 @@
       <tr>
         <td [textContent]="voyage.distanceKm"></td>
         <td [textContent]="voyage.consommationPour100Km"></td>
-        <td [textContent]="voyage.quantiteCO2"></td>
+        <td [textContent]="tronquerAffichageNombre(voyage.quantiteCO2)"></td>
       </tr>
     }
   </tbody>
