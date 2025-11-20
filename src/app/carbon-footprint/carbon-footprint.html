@@ -1,6 +1,3 @@
-<eni-carbon-footprint-form />
-<eni-carbon-footprint-result />
-
 <ul>
   <li [textContent]="'Distance totale : ' + distanceKm + 'km'"></li>
   <li [textContent]="'Consommation aux 100km : ' + consommationPour100Km"></li>
@@ -24,11 +21,11 @@
 <h2>Liste des voyages</h2>
 <table>
   <thead>
-    <tr>
-      <th>Distance</th>
-      <th>Consommation pour 100 km</th>
-      <th>Quantité CO2</th>
-    </tr>
+  <tr>
+    <th>Distance</th>
+    <th>Consommation pour 100 km</th>
+    <th>Quantité CO2</th>
+  </tr>
   </thead>
   <tbody>
     @for (voyage of voyages; track voyage.id) {
@@ -42,4 +39,3 @@
 </table>
 
 <button (click)="genererVoyage()">Générer voyage</button>
-

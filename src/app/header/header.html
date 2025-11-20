@@ -1,1 +1,4 @@
 <h1 [textContent]="title()"></h1>
+<h2 [textContent]="'Bienvenue, ' + nomUtilisateur"></h2>
+
+<button [routerLink]="['/profile', nomUtilisateur]">Voir le profil</button>

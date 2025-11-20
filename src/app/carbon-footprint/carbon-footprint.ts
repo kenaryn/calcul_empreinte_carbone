@@ -5,16 +5,11 @@ import {
   signal,
   WritableSignal
 } from '@angular/core';
-import {CarbonFootprintForm} from '../carbon-footprint-form/carbon-footprint-form';
-import {CarbonFootprintResult} from '../carbon-footprint-result/carbon-footprint-result';
 import {CarbonFootprintComputeService} from '../services/carbon-footprint-compute.service';
 
 @Component({
   selector: 'eni-carbon-footprint',
-  imports: [
-    CarbonFootprintForm,
-    CarbonFootprintResult,
-  ],
+  imports: [],
   templateUrl: './carbon-footprint.html',
   styleUrl: './carbon-footprint.css',
 })
