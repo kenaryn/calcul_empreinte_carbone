@@ -1,25 +1,81 @@
 <!--l'alias est une astuce pour supporter la nullabilité des signaux
 il garantit que la valeur est TOUJOURS définie dans la structure conditionnelle -->
-@if (getNomSiNonVide()) {
-  <h2 [class.admin]="isAdmin()" [textContent]="nom | titlecase | slice: 0:8"></h2>
-}
-<form>
-  <fieldset>
-    <legend>Fiche utilisateur</legend>
-    <label for="nom">Nom : </label>
-    <input #nomInput type="text" id="nom" name="nom" [(ngModel)]="nom" />
-  </fieldset>
-  <button (click)="reset()">Reset</button>
-  <button (click)="ajouterUtilisateur()">Ajouter</button>
-  <button (click)="login()">Se connecter</button>
-  <button (click)="utilisateurConnecte()">Je suis déjà connecté</button>
-</form>
+<!--@if (getNomSiNonVide()) {-->
+<!--  <h2 [class.admin]="isAdmin()" [textContent]="nom | titlecase | slice: 0:8"></h2>-->
+<!--}-->
+<!--<form>-->
+<!--  <fieldset>-->
+<!--    <legend>Fiche utilisateur</legend>-->
+<!--    <label for="nom">Nom : </label>-->
+<!--    <input #nomInput type="text" id="nom" name="nom" [(ngModel)]="nom" />-->
+<!--  </fieldset>-->
+<!--  <button (click)="reset()">Reset</button>-->
+<!--  <button (click)="ajouterUtilisateur()">Ajouter</button>-->
+<!--  <button (click)="login()">Se connecter</button>-->
+<!--  <button (click)="utilisateurConnecte()">Je suis déjà connecté</button>-->
+<!--</form>-->
 
-<ul>
-  @for (utilisateur of utilisateurs; track utilisateur.nom) {
-    <li>
-      <span [textContent]="utilisateur.nom | titlecase"></span>
-      <button class="delete" (click)="supprimerUtilisateur(utilisateur)">Supprimer</button>
-    </li>
-  }
-</ul>
+<!--<ul>-->
+<!--  @for (utilisateur of utilisateurs; track utilisateur.nom) {-->
+<!--    <li>-->
+<!--      <span [textContent]="utilisateur.nom | titlecase"></span>-->
+<!--      <button class="delete" (click)="supprimerUtilisateur(utilisateur)">Supprimer</button>-->
+<!--    </li>-->
+<!--  }-->
+<!--</ul>-->
+
+<form [formGroup]="myForm">
+  <fieldset>
+    <legend>Voyage</legend>
+    <div class="input-group">
+      <label for="distanceKm">Distance en km (30-600) : </label>
+      <input type="number" id="distanceKm" name="distanceKm" formControlName="distanceKm" min="30" max="600" step="5" />
+      @if (myForm.get('distanceKm')?.hasError('required')) {
+        <span class="alert">Saisissez une distance</span>
+      }
+      @if (myForm.get('distanceKm')?.hasError('min') && myForm.get('distanceKm')?.hasError('max')) {
+        <span class="alert">Entrez une distance comprise entre 30 et 600</span>
+      }
+    </div>
+
+    @if (isVoiture) {
+      <div class="input-group">
+        <label for="consommationPour100Km">Consommation pour 100 km (3-25) : </label>
+        <input type="number" id="consommationPour100Km" name="consommationPour100Km" formControlName="consommationPour100Km" min="3" max="25" step="1" />
+        @if (myForm.get('consommationPour100Km')?.hasError('required')) {
+          <span class="alert">Entrez une consommation non nulle</span>
+        }
+        @if (myForm.get('consommationPour100Km')?.hasError('min') && myForm.get('consommationPour100Km')?.hasError('max')) {
+          <span class="alert">Entre une consommation comprise entre 3 et 25</span>
+        }
+      </div>
+    }
+
+    <div class="input-group">
+      <label for="dateVoyage">Date : </label>
+      <input type="date" id="dateVoyage" name="dateVoyage" formControlName="dateVoyage" />
+      @if (myForm.get('dateVoyage')?.hasError('required')) {
+        <span class="alert">La date de voyage est obligatoire</span>
+      }
+      @if (myForm.get('dateVoyage')?.hasError('beforeToday')) {
+        <span class="alert">Entrez une date ultérieure à aujourd'hui</span>
+      }
+    </div>
+
+    <div class="input-group">
+      <label for="locomotion">Locomotion : </label>&nbsp;&nbsp;
+      <select name="locomotion" id="locomotion" formControlName="locomotion" (change)="onSelectType($event)">
+        <option selected disabled value="">Choix du transport</option>
+        <option value="voiture">Voiture</option>
+        <option value="train">Train</option>
+        <option value="avion">Avion</option>
+      </select>
+
+      @if (myForm.get('locomotion')?.hasError('required')) {
+        <span class="alert">Le type de locomotion est obligatoire</span>
+      }
+    </div>
+
+  </fieldset>
+  <button type="button" (click)="ajouterUnVoyage()" [disabled]="myForm.invalid">Ajouter un voyage</button>
+</form>

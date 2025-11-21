@@ -7,3 +7,7 @@
 button.delete {
   @apply text-sm rounded-2xl text-amber-100 bg-amber-600 m-0.5;
 }
+
+/*.input-group {*/
+/*  @apply flex flex-col mb-2;*/
+/*}*/

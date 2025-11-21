@@ -31,7 +31,17 @@ export class CarbonFootprintComputeService {
   }
 
   public ajouterVoyage(voyage: any): void {
-    voyage.quantiteCO2 = (voyage.distanceKm * voyage.consommationPour100Km) / 100 * 2.3;
+    if (!voyage.locomotion) {
+      voyage.locomotion = 'voiture';
+    }
+
+    if (voyage.locomotion === 'voiture') {
+      voyage.quantiteCO2 = (voyage.distanceKm * voyage.consommationPour100Km) / 100 * 2.3;
+    } else if (voyage.locomotion === 'train') {
+      voyage.quantiteCO2 = voyage.distanceKm * 0.03;
+    } else if (voyage.locomotion === 'avion') {
+      voyage.quantiteCO2 = voyage.distanceKm * 0.2;
+    }
     this._voyages.update(v => ([...v, voyage]));
   }
 }

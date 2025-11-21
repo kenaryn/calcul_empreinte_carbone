@@ -1,3 +1,28 @@
 <h1 [textContent]="'Bienvenue sur ' + title + '!'"></h1>
 
-<button (click)="login()" [routerLink]="['/summary']">Accéder à mon profil</button>
+<form>
+  <fieldset>
+    <legend>Identification</legend>
+    <div class="labelInputLayout">
+
+      <label for="identifier">Identifiant : </label>
+      <div>
+        <input type="text" id="identifier" name="identifier" [(ngModel)]="identifier" />
+      </div>
+        @if (erreurSaisieFormulaire) {
+          <p class="alert" [textContent]="erreurSaisieFormulaire"></p>
+        }
+
+      <label for="password">Mot de passe : </label>
+      <div>
+        <input type="password" id="password" name="password" [(ngModel)]="password" />
+        @if (erreurSaisieFormulaire) {
+          <span class="alert" [textContent]="erreurSaisieFormulaire"></span>
+        }
+      </div>
+
+    </div>
+  </fieldset>
+</form>
+
+<button (click)="loginUser()" [routerLink]="['/summary']">Se connecter</button>

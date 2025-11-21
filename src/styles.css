@@ -5,28 +5,51 @@ body {
 }
 
 button {
-  @apply cursor-pointer rounded-sm py-2 px-3 bg-amber-950 text-amber-400 m-1;
+  @apply cursor-pointer rounded-sm py-2 px-3 bg-amber-950 text-amber-400 m-1 relative transition-all;
+}
+
+button:hover {
+  @apply bg-amber-900;
+}
+
+button:active {
+  @apply top-0.5;
 }
 
 h1, h2, h3 {
   @apply font-semibold text-2xl text-amber-800;
 }
 
-input {
-  @apply min-w-2/4;
-}
 
 /* Forms */
+.labelInputLayout {
+/* Taille automatique pour les labels, prend tout l'espace restant pour les input */
+  @apply grid grid-cols-[max-content_1fr] items-center gap-x-3 gap-y-2;
+}
+
 label {
-  @apply min-w-32;
+  @apply inline-block text-right;
 }
 
 fieldset {
   @apply block m-2 p-1 border-2 border-amber-900;
+  /*@apply grid grid-cols-[150px_1fr] gap-y-3 gap-x-4;*/
 }
 
 legend {
   @apply font-thin italic px-1;
+}
+
+input[type="number"] {
+  @apply border-1 border-spacing-y-1 rounded-2xl w-28 px-3 py-0.5;
+}
+
+input[type="date"] {
+  @apply border-1 border-spacing-y-1 rounded-2xl w-40 px-3 py-0.5;
+}
+
+.alert {
+  @apply text-sm font-semibold text-red-500 px-2;
 }
 /* Forms • end */
 
@@ -57,3 +80,4 @@ tr > td {
 h1, h2, h3 {
   @apply mt-5 mb-2 mx-3;
 }
+

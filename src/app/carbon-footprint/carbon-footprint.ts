@@ -6,10 +6,13 @@ import {
   WritableSignal
 } from '@angular/core';
 import {CarbonFootprintComputeService} from '../services/carbon-footprint-compute.service';
+import {CarbonFootprintForm} from '../carbon-footprint-form/carbon-footprint-form';
 
 @Component({
   selector: 'eni-carbon-footprint',
-  imports: [],
+  imports: [
+    CarbonFootprintForm
+  ],
   templateUrl: './carbon-footprint.html',
   styleUrl: './carbon-footprint.css',
 })
@@ -18,11 +21,14 @@ export class CarbonFootprint implements OnInit {
   /* Injection de dépendances */
   protected carbonFootprintComputeService: CarbonFootprintComputeService = inject(CarbonFootprintComputeService);
 
+
+  /* Propriétés */
   protected _distanceKm: WritableSignal<number> = signal(50);
   protected _consommationPour100Km: WritableSignal<number> = signal(3.5);
   protected _quantiteCO2Totale: WritableSignal<number> = signal(15);
-  protected _voyages: WritableSignal<{ id: number, distanceKm: number, consommationPour100Km: number, quantiteCO2: number }[]> = signal([]);
-  /* Injection de dépendances - fin */
+
+  /* La propriété du composant copie la référence du signal du service pour réagir automatiquement aux changements dudit signal */
+  protected _voyages = this.carbonFootprintComputeService._voyages;
 
 
   /* Accesseurs */
@@ -53,16 +59,14 @@ export class CarbonFootprint implements OnInit {
   public get quantiteCO2Totale(): number {
     return this._quantiteCO2Totale();
   }
-  /* Accesseurs - fin */
 
 
   /* Cycle de vie du composant */
     ngOnInit(): void {
       console.info('Le composant est initialisé avec les données d\'un service API');
-      this.recupererVoyages();
+      // this.recupererVoyages();
       this.calculerTotalEtMoyenne();
     }
-  /* Cycle de vie du composant - fin */
 
 
   /* Méthodes · logique métier */
@@ -93,23 +97,13 @@ export class CarbonFootprint implements OnInit {
     this._distanceKm.update((distance: number): number => (distance + 100));
   }
 
-  // public genererVoyage(): void {
-  //   if (this.voyages) {
-  //     // Générer un nouvel identifiant
-  //     const nouveauId = this.voyages.length > 0 ? Math.max(...this.voyages.map(val => val.id)) + 1 : 1;
-  //
-  //     this._voyages.update(v =>
-  //       ([ ...v,
-  //         { id: 6, distanceKm: this.genererNombreAleatoire(30, 600, 5),
-  //           consommationPour100Km: this.genererNombreAleatoire(3, 11, 1),
-  //           quantiteCO2: this.genererNombreAleatoire(100, 400, 2) }
-  //       ]));
-  //   }
-  // }
 
   public genererVoyage(): void {
+    // Générer un nouvel identifiant de voyage
+    const nouveauId = this.voyages.length > 0 ? Math.max(...this.voyages.map(val => val.id)) + 1 : 1;
+
     const nouveauVoyage = {
-      id: 6,
+      id: nouveauId,
       distanceKm: this.genererNombreAleatoire(30, 600, 5),
       consommationPour100Km: this.genererNombreAleatoire(3, 11, 1),
       quantiteCO2: this.genererNombreAleatoire(100, 400, 2)
@@ -119,12 +113,11 @@ export class CarbonFootprint implements OnInit {
     this.carbonFootprintComputeService.ajouterVoyage(nouveauVoyage);
 
     // Met à jour le signal local du composant pour refléter le changement
-    this._voyages.set(this.carbonFootprintComputeService.voyages);
+    // this._voyages.set(this.carbonFootprintComputeService.voyages);
 
     // Recalculer les totaux APRES que les données du service soient mises à jour
     this.calculerTotalEtMoyenne();
   }
-  /* Méthodes · logique métier · fin */
 
 
   /* Méthodes · utilitaires */
@@ -132,6 +125,7 @@ export class CarbonFootprint implements OnInit {
     const paliers = Math.floor((max - min) / pas) + 1;
     return Math.floor(Math.random() * paliers) * pas + min;
   }
+
 
   protected tronquerAffichageNombre(nombreDecimal: number): number {
     let nombreTronque: string =  nombreDecimal.toLocaleString(undefined, {

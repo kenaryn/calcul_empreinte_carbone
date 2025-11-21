@@ -1,0 +1,5 @@
+@reference 'tailwindcss';
+
+input {
+  @apply border-2;
+}
