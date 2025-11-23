@@ -7,6 +7,7 @@ import {
 } from '@angular/core';
 import {CarbonFootprintComputeService} from '../services/carbon-footprint-compute.service';
 import {CarbonFootprintForm} from '../carbon-footprint-form/carbon-footprint-form';
+import {VoyageResume} from '../models/voyage.model';
 
 @Component({
   selector: 'eni-carbon-footprint',
@@ -71,10 +72,10 @@ export class CarbonFootprint implements OnInit {
 
   /* Méthodes · logique métier */
   public async calculerTotalEtMoyenne(): Promise<void> {
-    let resume = await this.carbonFootprintComputeService.getResumeVoyages();
-    this._distanceKm.set(resume.distanceKmTotale);
-    this._consommationPour100Km.set(resume.consommationPour100KmTotale);
-    this._quantiteCO2Totale.set(resume.quantiteCO2Totale);
+    let resume: VoyageResume = await this.carbonFootprintComputeService.getResumeVoyages();
+    this._distanceKm.set(resume.distanceKm);
+    this._consommationPour100Km.set(resume.consommationPour100Km);
+    this._quantiteCO2Totale.set(resume.quantiteCO2);
   }
 
 
