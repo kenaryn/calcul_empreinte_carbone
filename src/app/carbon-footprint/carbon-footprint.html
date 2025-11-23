@@ -21,23 +21,29 @@
 <button (click)="ajouter100Km()">Ajouter 100km</button>
 
 <h2>Liste des voyages</h2>
-<table>
-  <thead>
-  <tr>
-    <th>Distance</th>
-    <th>Consommation pour 100 km</th>
-    <th>Quantité CO2</th>
-  </tr>
-  </thead>
-  <tbody>
-    @for (voyage of voyages; track voyage.id) {
-      <tr>
-        <td [textContent]="voyage.distanceKm"></td>
-        <td [textContent]="voyage.consommationPour100Km"></td>
-        <td [textContent]="tronquerAffichageNombre(voyage.quantiteCO2)"></td>
-      </tr>
-    }
-  </tbody>
-</table>
 
+@if (loadingVoyages) {
+  <div>Chargement des voyages en cours...</div>
+}
+
+@if (!loadingVoyages) {
+  <table>
+    <thead>
+    <tr>
+      <th>Distance</th>
+      <th>Consommation pour 100 km</th>
+      <th>Quantité CO2</th>
+    </tr>
+    </thead>
+    <tbody>
+      @for (voyage of voyages; track voyage.id) {
+        <tr>
+          <td [textContent]="voyage.distanceKm"></td>
+          <td [textContent]="voyage.consommationPour100Km"></td>
+          <td [textContent]="tronquerAffichageNombre(voyage.quantiteCO2)"></td>
+        </tr>
+      }
+    </tbody>
+  </table>
+}
 <button (click)="genererVoyage()">Générer voyage</button>

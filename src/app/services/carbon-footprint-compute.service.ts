@@ -15,8 +15,15 @@ export class CarbonFootprintComputeService {
     { id: 5, distanceKm: 450, consommationPour100Km: 9, quantiteCO2: 340},
   ]);
 
+  // public get voyages(): Promise<Voyage[]> {
+  //   return Promise.resolve(this._voyages());
+  // }
   public get voyages(): Promise<Voyage[]> {
-    return Promise.resolve(this._voyages());
+    return new Promise((resolve) => {
+      setTimeout(() => {
+        resolve(this._voyages());
+      }, 5_000);
+    });
   }
 
   // public async getResumeVoyages(): Promise<{ distanceKmTotale: number, consommationPour100KmTotale: number, quantiteCO2Totale: number }> {

@@ -31,6 +31,8 @@ export class CarbonFootprint implements OnInit {
   /* La propriété du composant copie la référence du signal du service pour réagir automatiquement aux changements dudit signal */
   protected _voyages = this.carbonFootprintComputeService._voyages;
 
+  protected loadingVoyages: boolean = false;
+
 
   /* Accesseurs */
   public get voyages(): { id: number, distanceKm: number, consommationPour100Km: number, quantiteCO2: number }[] {
@@ -61,12 +63,22 @@ export class CarbonFootprint implements OnInit {
     return this._quantiteCO2Totale();
   }
 
+  public async loadData(): Promise<void> {
+    this.loadingVoyages = true;
+    try {
+      this._voyages = this.carbonFootprintComputeService._voyages;
+      await this.calculerTotalEtMoyenne().then(() => console.warn());
+    } catch (err) {
+      console.warn('Problème de résolution asynchrone avec \'calculerTotalEtMoyenne()\'')
+    } finally {
+      this.loadingVoyages = false;
+    }
+  }
 
   /* Cycle de vie du composant */
     ngOnInit(): void {
       console.info('Le composant est initialisé avec les données d\'un service API');
-      // this.recupererVoyages();
-      this.calculerTotalEtMoyenne().then(() => console.warn('Problème de résolution asynchrone avec \'calculerTotalEtMoyenne()\''));
+      this.loadData().then(() => console.info('L\'initialisation des données du composant \'carbon-footprint\' a rencontré un problème'));
     }
 
 
