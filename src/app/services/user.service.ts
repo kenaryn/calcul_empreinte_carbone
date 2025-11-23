@@ -6,11 +6,16 @@ import { Injectable } from '@angular/core';
 export class UserService {
   protected username: string = '';
 
-  public login(username: string): void {
-    this.username = username;
+  public login(username: string): Promise<void> {
+    return new Promise((resolve, reject) => {
+      this.username = username;
+      resolve();
+    });
   }
 
-  public getUsername(): string {
-    return this.username;
+  public async getUsername(): Promise<string> {
+    return new Promise((resolve, reject) => {
+      resolve(this.username);
+    });
   }
 }

@@ -18,6 +18,10 @@ export class Header implements OnInit {
   protected readonly title: WritableSignal<string> = signal('Calcul de l\'empreinte carbone');
 
     ngOnInit() : void {
-      this.nomUtilisateur =  this.userService.getUsername();
+      this.chargerDonneesUtilisateur().then(() => console.warn('Problème d\'accès au service `user` à l\'initialiastion du composant Header'));
+    }
+
+    public async chargerDonneesUtilisateur(): Promise<void> {
+      this.nomUtilisateur =  await this.userService.getUsername();
     }
 }

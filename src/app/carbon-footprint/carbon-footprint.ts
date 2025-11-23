@@ -65,25 +65,18 @@ export class CarbonFootprint implements OnInit {
     ngOnInit(): void {
       console.info('Le composant est initialisé avec les données d\'un service API');
       // this.recupererVoyages();
-      this.calculerTotalEtMoyenne();
+      this.calculerTotalEtMoyenne().then(() => console.warn('Problème de résolution asynchrone avec \'calculerTotalEtMoyenne()\''));
     }
 
 
   /* Méthodes · logique métier */
-  public calculerTotalEtMoyenne() {
-    let resume = this.carbonFootprintComputeService.getResumeVoyages();
+  public async calculerTotalEtMoyenne(): Promise<void> {
+    let resume = await this.carbonFootprintComputeService.getResumeVoyages();
     this._distanceKm.set(resume.distanceKmTotale);
     this._consommationPour100Km.set(resume.consommationPour100KmTotale);
     this._quantiteCO2Totale.set(resume.quantiteCO2Totale);
   }
 
-  /**
-   * Récupère les données du service et met à jour le signal local du composant
-   */
-  public recupererVoyages(): void {
-    console.info('Composant recupererVoyages');
-    this._voyages.set(this.carbonFootprintComputeService.voyages);
-  }
 
   public isLowOrHigh = (): string => (this.consommationPour100Km > 7) ? 'high' : (this.consommationPour100Km < 4) ? 'low' : 'normal';
 
@@ -98,7 +91,7 @@ export class CarbonFootprint implements OnInit {
   }
 
 
-  public genererVoyage(): void {
+  public async genererVoyage(): Promise<void> {
     // Générer un nouvel identifiant de voyage
     const nouveauId = this.voyages.length > 0 ? Math.max(...this.voyages.map(val => val.id)) + 1 : 1;
 
@@ -110,13 +103,10 @@ export class CarbonFootprint implements OnInit {
     };
 
     // Ajoute le voyage au service
-    this.carbonFootprintComputeService.ajouterVoyage(nouveauVoyage);
-
-    // Met à jour le signal local du composant pour refléter le changement
-    // this._voyages.set(this.carbonFootprintComputeService.voyages);
+    await this.carbonFootprintComputeService.ajouterVoyage(nouveauVoyage);
 
     // Recalculer les totaux APRES que les données du service soient mises à jour
-    this.calculerTotalEtMoyenne();
+    await this.calculerTotalEtMoyenne();
   }
 
 

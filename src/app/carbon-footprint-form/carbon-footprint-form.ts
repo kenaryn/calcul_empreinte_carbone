@@ -52,14 +52,14 @@ export class CarbonFootprintForm implements AfterViewInit, OnInit {
   /**
    * Ajoute un voyage dans le service CarbonFootprintService
    */
-  public ajouterUnVoyage(): void {
+  public async ajouterUnVoyage(): Promise<void> {
     if (this.myForm.valid) {
       // Récupérer le dernier ID pour générer le suivant
-      const dernierVoyage = this.carbonFootprintComputeService
-        .voyages.reduce((max, v) => Math.max(max, v.id), 0);
+      const dernierVoyage = (await this.carbonFootprintComputeService
+        .voyages).reduce((max, v) => Math.max(max, v.id), 0);
       const nouveauId = dernierVoyage + 1;
 
-      this.carbonFootprintComputeService.ajouterVoyage({
+      await this.carbonFootprintComputeService.ajouterVoyage({
         id: nouveauId,
         distanceKm: this.myForm.value.distanceKm,
         consommationPour100Km: this.myForm.value.consommationPour100Km,
@@ -122,8 +122,6 @@ export class CarbonFootprintForm implements AfterViewInit, OnInit {
         this.nomInput?.nativeElement.focus();
       }
     }, 0);
-
-    // this.utilisateur.focus();  // C'est un signal inscriptible, pas un élement du DOM. Il n'a donc pas de méthode `focus()`
   }
 
   public get utilisateurs(): Array<{ nom: string }> {
